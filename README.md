@@ -47,9 +47,9 @@ I2C LCD Display:
 
 ---
 
-## 🔗 Tinkercad Simulation
+ 🔗 Tinkercad Simulation
 
-👉 **[View Circuit on Tinkercad](https://www.tinkercad.com/things/kqESg98HoY3-remote-sensing-blind-cane)
+👉 [View Circuit on Tinkercad] (https://www.tinkercad.com/things/kqESg98HoY3-remote-sensing-blind-cane)
 
 ---
 
