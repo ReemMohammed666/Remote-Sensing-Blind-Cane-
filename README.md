@@ -28,7 +28,3 @@ https://www.tinkercad.com/things/kqESg98HoY3-remote-sensing-blind-cane
  Project Files
 Arduino Source Code: Remote ensing blind cane.ino
 Project Documentation: Remote Sensing Blind Cane.pdf
-
----
-
-أول ما تخلصي الرفع وتدوسي Commit changes قوليلي عشان نظبط البروفايل الرئيسي للـ GitHub بتاعك بـ Profile README مميز جداً!
