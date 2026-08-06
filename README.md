@@ -1,30 +1,129 @@
-Remote Sensing Blind Cane
 
-About The Project :
-A visual aid device for the visually impaired that relies on remote sensing technology using ultrasonic waves to provide the user with alerts based on obstacle distance, enabling them to detect obstacles and know their distance before collision.
+ Smart Bio-pulse & Oximetry Monitor
 
-Components Used :
-Arduino 
-Ultrasonic Distance Sensor
-Audio Alert Unit (Buzzer)
-Power Source
+An Arduino-based pulse oximeter simulator project that monitors SpO2 levels and heart rate (BPM), featuring an I2C LCD display, visual indicators (LEDs), and audio alerts (Buzzer) for critical thresholds.
 
-How It Works:
-Pulse Emission & Reception: The ultrasonic sensor emits a high-frequency pulse. When it hits an obstacle, it reflects back and is received by the sensor.
-Distance Calculation: Arduino calculates the total time and distance using the formula:
+---
 
-$$\text{Distance} = \frac{\text{Time} \times 0.034}{2}$$
+ 🛠️ Components
 
-Detection Zones: The system maps the distance into three operational zones:
-Safe Zone
-Warning Zone
-Danger Zone
+ Arduino UNO
 
- Circuit Diagram and Simulation:
+ 16x2 I2C LCD Display
 
-Tinkercad Simulation Link:
-https://www.tinkercad.com/things/kqESg98HoY3-remote-sensing-blind-cane
+ Potentiometer (`250kΩ`) (acting as a biometric sensor simulator)
 
- Project Files
-Arduino Source Code: Remote ensing blind cane.ino
-Project Documentation: Remote Sensing Blind Cane.pdf
+ Green & Red LEDs (with `1kΩ` resistors)
+
+ Buzzer
+
+Jumper Wires
+
+---
+
+ 🔌 Pin Connections
+
+Potentiometer (`A0`): Connected to Analog Pin A0
+
+
+I2C LCD Display:
+ `SDA` to Arduino SDA (A4)
+
+
+ `SCL` to Arduino SCL (A5)
+
+
+
+
+  Green LED: Digital Pin 2
+
+
+  Red LED: Digital Pin 3
+
+
+  Buzzer: Digital Pin 4
+
+
+
+---
+
+## 🔗 Tinkercad Simulation
+
+👉 **[View Circuit on Tinkercad](https://www.tinkercad.com/things/kqESg98HoY3-remote-sensing-blind-cane)
+
+---
+
+💻 Source Code
+
+```cpp
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+const int potPin = A0;
+const int greenLed = 2;
+const int redLed = 3;
+const int buzzer = 4;
+
+unsigned long previousMillis = 0;
+const long interval = 500;
+
+void setup()
+{
+    pinMode(greenLed, OUTPUT);
+    pinMode(redLed, OUTPUT);
+    pinMode(buzzer, OUTPUT);
+
+    lcd.init();
+    lcd.backlight();
+
+    lcd.setCursor(0, 0);
+    lcd.print("Pulse Oximeter");
+    lcd.setCursor(0, 1);
+    lcd.print("Initializing...");
+    delay(2000);
+    lcd.clear();
+}
+
+void loop()
+{
+    unsigned long currentMillis = millis();
+
+    if (currentMillis - previousMillis >= interval)
+    {
+        previousMillis = currentMillis;
+
+        int rawValue = analogRead(potPin);
+
+        int spo2 = map(rawValue, 0, 1023, 100, 75);
+        int bpm = map(rawValue, 0, 1023, 110, 60) + random(-2, 3);
+
+        lcd.setCursor(0, 0);
+        lcd.print("SpO2: ");
+        if (spo2 < 100)
+            lcd.print(" ");
+        lcd.print(spo2);
+        lcd.print("%   ");
+
+        lcd.setCursor(0, 1);
+        lcd.print("BPM : ");
+        if (bpm < 100)
+            lcd.print(" ");
+        lcd.print(bpm);
+        lcd.print("     ");
+
+        if (spo2 < 92)
+        {
+            digitalWrite(redLed, HIGH);
+            digitalWrite(greenLed, LOW);
+            tone(buzzer, 1000);
+        }
+        else
+        {
+            digitalWrite(redLed, LOW);
+            digitalWrite(greenLed, HIGH);
+            noTone(buzzer);
+            tone(buzzer, 800, 50); 
+        }
+    }
+}
